@@ -52,7 +52,7 @@
 
     <p>Koraci za <strong>bob</strong> (napadač):</p>
     <ol>
-      <li>Otvori <a href="/comments">/comments</a>.</li>
+      <li>Otvori <a href="/comments">Komentari</a>.</li>
       <li>Upiši bilo što u polje za autora te u polje za komentar zalijepi jedan od sljedećih payloada:</li>
     </ol>
 
@@ -69,7 +69,7 @@
 
     <ol start="4">
       <li>Klikni <strong>Pošalji</strong> — komentar će se pohraniti u bazu i ti ćeš vidjeti efekt odmah ako je XSS omogućen (stranica će se osvježiti).</li>
-      <li>Ako XSS već nije uključen, uključi XSS i otvori <a href="/comments">/comments</a>. </li>
+      <li>Ako XSS već nije uključen, uključi XSS i otvori <a href="/comments">Komentari</a>. </li>
       <li>Vidjet ćeš alert ili demo banner (ovisno o payloadu).</li>
     </ol>
 
@@ -84,7 +84,7 @@
   <section class="alice-howto" style="margin-top:14px; border:1px solid #ddd; padding:12px; border-radius:6px; background:#f9f9ff; width:600px;">
     <h3>Upute za reproduciranje Broken Access Control — uloga: <%= user.username %></h3>
     <ol>
-      <li>Idite na <a href="/tickets">/tickets</a>. Vidjet ćete samo svoje tickete (npr. ID = <em>1</em>).</li>
+      <li>Idite na <a href="/tickets">Ticketi</a>. Vidjet ćete samo svoje tickete (npr. ID = <em>1</em>).</li>
       <li>Kliknite na <strong>Edit</strong> za svoj ticket i provjerite u formi da se prikazuje <strong>ID 1</strong>.</li>
       <li>U adresnoj traci ručno promijenite ID u URL-u: npr. promijenite 
         <code>/tickets/1/edit</code> → <code>/tickets/2/edit</code> i pritisnite Enter.</li>
@@ -93,7 +93,7 @@
     </ol>
 
     <p style="color:#555; font-size:0.95em;">
-      Ako je na početnoj stranici <strong>Allow Broken Access Control = OFF</strong>, ako alice proba doći do bobovog ticketa, redirectat će se na <a href="/tickets">/tickets</a> rutu.
+      Ako je na početnoj stranici <strong>Allow Broken Access Control = OFF</strong>, ako alice proba doći do bobovog ticketa, redirectat će se na <a href="/tickets">Ticketi</a> rutu.
     </p>
   </section>
 <% } %>
