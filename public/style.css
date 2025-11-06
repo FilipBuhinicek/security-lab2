@@ -1,0 +1,20 @@
+.admin-toggles {
+  border: 1px solid #ccc;
+  padding: 15px;
+  background: #f8f8f8;
+  border-radius: 8px;
+  width: 320px;
+  margin-top: 15px;
+}
+
+.admin-toggles h3 {
+  margin-top: 0;
+}
+
+.warn {
+  margin-top: 15px;
+  background: #fee;
+  padding: 10px;
+  border: 1px solid #f99;
+  border-radius: 6px;
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lab 2 – Sigurnosne ranjivosti</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Lab 2 — Sigurnosne ranjivosti</h1>
+    <nav>
+      <a href="/">Početna</a>
+      <% if (user) { %>
+        <a href="/comments">Komentari (XSS demo)</a>
+        <a href="/tickets">Ticketi (Access Control demo)</a>
+      <% } %>
+
+      <% if (user) { %>
+        <form style="display:inline" method="post" action="/logout">
+          <button type="submit">Odjava (<%= user.username %>)</button>
+        </form>
+      <% } else { %>
+        <a href="/login">Prijava</a>
+      <% } %>
+    </nav>
+    <hr>
+  </header>
+
+  <main>
+    <%- body %>
+  </main>
+</body>
+</html>

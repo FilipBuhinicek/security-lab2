@@ -1,0 +1,6 @@
+<h2>Edit ticket <%= ticket.id %></h2>
+<form method="post" action="/tickets/<%= ticket.id %>/edit">
+  <input name="title" value="<%= ticket.title %>" required><br>
+  <textarea name="content" required><%= ticket.content %></textarea><br>
+  <button>Spremi</button>
+</form>

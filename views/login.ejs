@@ -1,0 +1,8 @@
+<h2>Login</h2>
+<form method="post" action="/login">
+  <input name="username" placeholder="username" required><br>
+  <input name="password" type="password" placeholder="password" required><br>
+  <button>Login</button>
+  <% if(error){ %><p style="color:red"><%= error %></p><% } %>
+</form>
+<p>Test accounts: alice/alice123, bob/bob123</p>

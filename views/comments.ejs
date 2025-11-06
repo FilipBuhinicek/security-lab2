@@ -1,0 +1,25 @@
+<h2>Comments (Stored XSS demo)</h2>
+<form method="post" action="/comments">
+  <input name="author" placeholder="Autor" required>
+  <br>
+  <textarea name="text" placeholder="Komentar" required></textarea>
+  <br>
+  <button>Pošalji</button>
+</form>
+
+<h3>Lista komentara</h3>
+<ul>
+  <% comments.forEach(c=>{ %>
+    <li>
+      <strong><%= c.author %></strong> -
+      <em><%= new Date(c.created_at).toLocaleString() %></em>
+      <div>
+        <% if(vulnerableXSS){ %>
+          <%- c.textRaw %>
+        <% } else { %>
+          <pre><%= c.textEsc %></pre>
+        <% } %>
+      </div>
+    </li>
+  <% }) %>
+</ul>

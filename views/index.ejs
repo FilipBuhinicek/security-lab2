@@ -1,0 +1,117 @@
+<h1>Vulnerability demo</h1>
+
+<p>Ukupan broj komentara: <%= commentCount %></p>
+
+<% if (user) { %>
+  <div class="admin-toggles">
+    <h3>🛠 Toggles</h3>
+    <form method="POST" action="/admin/toggles">
+      <label>
+        <input type="checkbox" name="vulnerableXSS" <%= toggles.vulnerableXSS ? "checked" : "" %> >
+        Allow XSS vulnerability
+      </label>
+      <br>
+      <label>
+        <input type="checkbox" name="brokenAccess" <%= toggles.brokenAccess ? "checked" : "" %> >
+        Allow Broken Access Control
+      </label>
+      <br>
+      <button type="submit">💾 Spremi promjene</button>
+    </form>
+  </div>
+
+<% } else if (user) { %>
+  <div class="warn">
+    <strong>Toggles:</strong> XSS = <%= toggles.vulnerableXSS %>, AccessControl = <%= toggles.brokenAccess %>
+  </div>
+
+<% } else { %>
+  <div class="guest-info">
+    <h3>Testni računi (za reprodukciju)</h3>
+    <ul>
+      <li><strong>alice</strong> / alice123 — običan korisnik (za IDOR test)</li>
+      <li><strong>bob</strong> / bob123 — običan korisnik (za XSS test)</li>
+    </ul>
+
+    <p><strong>Upute (kratko):</strong></p>
+    <ul>
+      <li>Demonstriracija <em>XSS</em>: ulogirajte se kao <strong>bob</strong> i slijedite upute prikazane na početnoj stranici nakon prijave.</li>
+      <li>Demonstriracija <em>Broken Access Control</em>: ulogirajte se kao <strong>alice</strong> i slijedite upute nakon prijave.</li>
+    </ul>
+
+    <p style="font-size:0.95em; color:#555;">
+      Napomena: linkovi za <strong>Comments</strong> i <strong>Tickets</strong> su vidljivi tek nakon prijave. Prijavite se pomoću gore navedenih računa.
+    </p>
+  </div>
+<% } %>
+
+<% /* Attacker instructions visible only to bob */ %>
+<% if (user && user.username === 'bob') { %>
+  <section class="bob-howto">
+    <h3>Upute za reproduciranje XSS (uloga: <%= user.username %>)</h3>
+
+    <p>Koraci za <strong>bob</strong> (napadač):</p>
+    <ol>
+      <li>Otvori <a href="/comments">/comments</a>.</li>
+      <li>Upiši bilo što u polje za autora te u polje za komentar zalijepi jedan od sljedećih payloada:</li>
+    </ol>
+
+    <pre>&lt;script&gt;alert('XSS: izvršeno u kontekstu korisnika')&lt;/script&gt;</pre>
+
+    <pre>
+  &lt;script&gt;
+    document.body.insertAdjacentHTML('afterbegin',
+      '&lt;div style="background:#ffdddd;border:2px solid #ff4444;padding:12px;margin:0 0 12px 0;font-weight:bold;color:#660000;text-align:center;"&gt;OVO JE DEMO XSS BANNER&lt;/div&gt;'
+    );
+  &lt;/script&gt;
+    </pre>
+
+
+    <ol start="4">
+      <li>Klikni <strong>Pošalji</strong> — komentar će se pohraniti u bazu i ti ćeš vidjeti efekt odmah ako je XSS omogućen (stranica će se osvježiti).</li>
+      <li>Ako XSS već nije uključen, uključi XSS i otvori <a href="/comments">/comments</a>. </li>
+      <li>Vidjet ćeš alert ili demo banner (ovisno o payloadu).</li>
+    </ol>
+
+    <p style="color:#555; font-size:0.9em;">
+      Napomena: Ako je XSS uključen, JavaScript u komentarima se izvršava; ako je isključen, vidiš tekst escapano.
+    </p>
+  </section>
+<% } %>
+
+
+<% if (user && user.username === 'alice') { %>
+  <section class="alice-howto" style="margin-top:14px; border:1px solid #ddd; padding:12px; border-radius:6px; background:#f9f9ff; width:600px;">
+    <h3>Upute za reproduciranje Broken Access Control — uloga: <%= user.username %></h3>
+    <ol>
+      <li>Idite na <a href="/tickets">/tickets</a>. Vidjet ćete samo svoje tickete (npr. ID = <em>1</em>).</li>
+      <li>Kliknite na <strong>Edit</strong> za svoj ticket i provjerite u formi da se prikazuje <strong>ID 1</strong>.</li>
+      <li>U adresnoj traci ručno promijenite ID u URL-u: npr. promijenite 
+        <code>/tickets/1/edit</code> → <code>/tickets/2/edit</code> i pritisnite Enter.</li>
+      <li>Sada ćete vidjeti formu za uređivanje ticket-a s ID = 2 (Bobov ticket). Promijenite autora ili sadržaj i pritisnite <strong>Spremi</strong>.</li>
+      <li>Prijavite se kao <strong>bob</strong>) i provjerite da je Bobov ticket promijenjen — to pokazuje Broken Access Control ako je <code>brokenAccess = true</code>.</li>
+    </ol>
+
+    <p style="color:#555; font-size:0.95em;">
+      Ako je na početnoj stranici <strong>Allow Broken Access Control = OFF</strong>, ako alice proba doći do bobovog ticketa, redirectat će se na <a href="/tickets">/tickets</a> rutu.
+    </p>
+  </section>
+<% } %>
+
+<style>
+  .admin-toggles {
+    border: 1px solid #ccc;
+    padding: 12px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    width: 360px;
+    margin-top: 15px;
+  }
+  .warn { margin-top: 15px; background:#fee; padding:10px; border:1px solid #f99; border-radius:6px; }
+  .guest-info { border:1px solid #ddd; padding:12px; background:#fbfbfb; border-radius:6px; margin-top:12px; width:520px; }
+  .alice-howto h3 { margin-top:0; }
+  .alice-howto code { background:#eee; padding:2px 4px; border-radius:3px; }
+  .bob-howto{ border:1px solid #e5a; background:#fff7fb; padding:12px; border-radius:6px; margin-top:12px; }
+  .bob-howto pre{ background:#111; color:#eee; padding:8px; border-radius:4px; overflow:auto; }
+  .bob-howto code{ background:#f1f1f1; padding:2px 6px; border-radius:3px; }
+</style>
